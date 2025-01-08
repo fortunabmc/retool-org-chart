@@ -10,17 +10,28 @@ interface ButtonProps {
 
 const Button: React.FC<ButtonProps> = ({ onClick, children }) => {
   const theme = useTheme();
-  const { color, bgColor, hoverBgColor } = theme.controls;
+  const { fontSize, color, bgColor, hoverBgColor } = theme.controls;
 
   const StyledButton = styled.button`
     background-color: ${bgColor};
     border: none;
     color: ${color};
-    padding: 10px 20px;
+    padding: 5px 10px;
     text-align: center;
     text-decoration: none;
     display: inline-block;
-    font-size: 16px;
+    font-family:
+      "Inter var",
+      Inter,
+      -apple-system,
+      BlinkMacSystemFont,
+      system-ui,
+      Segoe UI,
+      Roboto,
+      Helvetica Neue,
+      Ubuntu,
+      sans-serif;
+    font-size: ${fontSize};
     margin: 4px 2px;
     cursor: pointer;
     border-radius: 4px;

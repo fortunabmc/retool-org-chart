@@ -1,19 +1,18 @@
 import { createContext } from "react";
 
-type OrgChartThemeContext = {
+const DEFAULT_THEME = {
   controls: {
-    color: string;
-    bgColor: string;
-    hoverBgColor: string;
-  };
-};
-
-const ThemeContext = createContext<OrgChartThemeContext>({
-  controls: {
+    fontSize: "1.2em",
     color: "white",
     bgColor: "blue",
     hoverBgColor: "darkblue"
   }
-});
+};
+
+type OrgChartThemeContext = typeof DEFAULT_THEME;
+
+const ThemeContext = createContext<OrgChartThemeContext>(DEFAULT_THEME);
 
 export default ThemeContext;
+
+export type { OrgChartThemeContext };

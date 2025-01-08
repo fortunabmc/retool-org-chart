@@ -1,9 +1,29 @@
 import React from "react";
 import * as d3 from "d3";
-import { OrgChart } from "d3-org-chart";
-import { withDefault, toCss } from "./utils";
-import type { OrgChartProps, User } from "./types";
+import { OrgChart, type Layout } from "d3-org-chart";
+
 import Button from "./Button";
+import { withDefault, toCss } from "./utils";
+
+import type { User } from "./User";
+import type { Retool } from "@tryretool/custom-component-support";
+
+type OrgChartProps = {
+  data: Retool.SerializableArray;
+  onNodeClick: () => void;
+  setClickedNode: (user: User) => void;
+  layout?: Layout;
+  primaryColor?: string;
+  linkColor?: string;
+  nodeWidth?: number;
+  nodeHeight?: number;
+  linkWidth?: number;
+  childrenMargin?: number;
+  siblingsMargin?: number;
+  neighbourMargin?: number;
+  compactMarginPair?: number;
+  compactMarginBetween?: number;
+};
 
 /**
  * D3 Based OrgChart
@@ -128,7 +148,7 @@ export const OrgChartComponent: React.FC<OrgChartProps> = ({
       chart
         .container(d3Container.current)
         .data(Array.from(data) as unknown as User[])
-        .layout(layout ?? "top")
+        // .layout(layout ?? "top")
         .setActiveNodeCentered(true)
         .render();
     }
@@ -136,8 +156,11 @@ export const OrgChartComponent: React.FC<OrgChartProps> = ({
 
   return (
     <div>
-      <Button onClick={() => chartRef.current.expandAll()}>Expand All</Button>
       <Button onClick={() => chartRef.current.fit()}>Fit To Screen</Button>
+      <Button onClick={() => chartRef.current.expandAll()}>Expand All</Button>
+      <Button onClick={() => chartRef.current.collapseAll()}>
+        Collapse All
+      </Button>
       <div ref={d3Container}></div>
     </div>
   );

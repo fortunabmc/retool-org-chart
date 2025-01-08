@@ -1,10 +1,13 @@
 import React from "react";
+import chroma from "chroma-js";
 import { Retool } from "@tryretool/custom-component-support";
 
 import { OrgChartComponent } from "./OrgChart";
 import ThemeContext from "./ThemeContext";
 
 import type { Layout } from "d3-org-chart";
+
+import { FORTUNA_PURPLE } from "./Constants";
 
 export const OrgChart: React.FC = () => {
   Retool.useComponentSettings({
@@ -107,9 +110,10 @@ export const OrgChart: React.FC = () => {
     <ThemeContext.Provider
       value={{
         controls: {
+          fontSize: "1em",
           color: "white",
-          bgColor: "blue",
-          hoverBgColor: "#870BC8"
+          bgColor: FORTUNA_PURPLE,
+          hoverBgColor: chroma(FORTUNA_PURPLE).darken().hex()
         }
       }}
     >
