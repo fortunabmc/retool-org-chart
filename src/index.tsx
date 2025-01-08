@@ -2,6 +2,9 @@ import React from "react";
 import { Retool } from "@tryretool/custom-component-support";
 
 import { OrgChartComponent } from "./OrgChart";
+import ThemeContext from "./ThemeContext";
+
+import type { Layout } from "d3-org-chart";
 
 export const OrgChart: React.FC = () => {
   Retool.useComponentSettings({
@@ -9,59 +12,68 @@ export const OrgChart: React.FC = () => {
     defaultWidth: 10
   });
 
-  const [data, setData] = Retool.useStateArray({
+  const [data] = Retool.useStateArray({
     name: "data",
     label: "User List",
     description: "Array of users with `id` and `parentId`"
   });
 
+  const [layout] = Retool.useStateEnumeration({
+    name: "layout",
+    label: "Layout Style",
+    description: "Direction of layout for the tree",
+    enumDefinition: ["left", "top", "bottom", "right"],
+    inspector: "segmented",
+    initialValue: "left"
+  });
+
   const [nodeHeight] = Retool.useStateNumber({
     name: "nodeHeight",
     label: "Node Height",
-    initialValue: 200,
-    description: "Height of the rendered node"
+    description: "Height of the rendered node",
+    initialValue: 200
   });
 
   const [nodeWidth] = Retool.useStateNumber({
     name: "nodeWidth",
     label: "Node Height",
-    initialValue: 250,
-    description: "Width of the rendered node"
+    description: "Width of the rendered node",
+    initialValue: 250
   });
 
   const [childrenMargin] = Retool.useStateNumber({
     name: "childrenMargin",
     label: "Children-Parent Gap",
-    initialValue: 60,
-    description: "Vertical spacing between parent and children"
+    description: "Vertical spacing between parent and children",
+    initialValue: 60
   });
 
   const [siblingsMargin] = Retool.useStateNumber({
     name: "siblingsMargin",
     label: "Siblings Gap",
-    initialValue: 60,
-    description: "Horizontal spacing between sibling nodes"
+    description: "Horizontal spacing between sibling nodes",
+    initialValue: 60
   });
 
   const [neighbourMargin] = Retool.useStateNumber({
     name: "neighbourMargin",
     label: "Neighbor Spacing",
-    initialValue: 80,
-    description: "Horizontal spacing between groups of child nodes"
+    description: "Horizontal spacing between groups of child nodes",
+    initialValue: 80
   });
 
   const [compactMarginPair] = Retool.useStateNumber({
     name: "compactMarginPair",
     label: "Child X Gap",
-    initialValue: 100,
-    description: "Horizontal spacing between sibling child nodes"
+    description: "Horizontal spacing between sibling child nodes",
+    initialValue: 100
   });
 
   const [compactMarginBetween] = Retool.useStateNumber({
     name: "compactMarginBetween",
     label: "Child Y Gap",
-    initialValue: 50,
-    description: "Vertical spacing between sibling child nodes"
+    description: "Vertical spacing between sibling child nodes",
+    initialValue: 50
   });
 
   const [primaryColor] = Retool.useStateString({
@@ -79,34 +91,44 @@ export const OrgChart: React.FC = () => {
   const [linkWidth] = Retool.useStateNumber({
     name: "linkWidth",
     label: "Link Width",
-    initialValue: 2,
-    description: "Stroke width of the links between nodes"
+    description: "Stroke width of the links between nodes",
+    initialValue: 2
   });
 
   const onNodeClick = Retool.useEventCallback({
     name: "onNodeClick"
   });
 
-  const [_, setClickedNode] = Retool.useStateString({
-    name: "clickedNode",
-    inspector: "hidden"
+  const [_, setClickedNode] = Retool.useStateObject({
+    name: "onNodeClick"
   });
 
   return (
-    <OrgChartComponent
-      data={data}
-      linkColor={linkColor}
-      primaryColor={primaryColor}
-      nodeWidth={nodeWidth}
-      nodeHeight={nodeHeight}
-      linkWidth={linkWidth}
-      childrenMargin={childrenMargin}
-      siblingsMargin={siblingsMargin}
-      neighbourMargin={neighbourMargin}
-      compactMarginPair={compactMarginPair}
-      compactMarginBetween={compactMarginBetween}
-      onNodeClick={onNodeClick}
-      setClickedNode={setClickedNode}
-    />
+    <ThemeContext.Provider
+      value={{
+        controls: {
+          color: "white",
+          bgColor: "blue",
+          hoverBgColor: "#870BC8"
+        }
+      }}
+    >
+      <OrgChartComponent
+        data={data}
+        linkColor={linkColor}
+        layout={layout as Layout}
+        primaryColor={primaryColor}
+        nodeWidth={nodeWidth}
+        nodeHeight={nodeHeight}
+        linkWidth={linkWidth}
+        childrenMargin={childrenMargin}
+        siblingsMargin={siblingsMargin}
+        neighbourMargin={neighbourMargin}
+        compactMarginPair={compactMarginPair}
+        compactMarginBetween={compactMarginBetween}
+        onNodeClick={onNodeClick}
+        setClickedNode={setClickedNode}
+      />
+    </ThemeContext.Provider>
   );
 };

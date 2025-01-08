@@ -1,8 +1,9 @@
 import React from "react";
 import * as d3 from "d3";
 import { OrgChart } from "d3-org-chart";
-
+import { withDefault, toCss } from "./utils";
 import type { OrgChartProps, User } from "./types";
+import Button from "./Button";
 
 /**
  * D3 Based OrgChart
@@ -12,6 +13,7 @@ import type { OrgChartProps, User } from "./types";
 export const OrgChartComponent: React.FC<OrgChartProps> = ({
   data,
   primaryColor,
+  layout,
   nodeWidth,
   nodeHeight,
   linkWidth,
@@ -25,6 +27,7 @@ export const OrgChartComponent: React.FC<OrgChartProps> = ({
 }) => {
   const d3Container = React.useRef(null);
   const chartRef = React.useRef(new OrgChart<User>());
+
   const styles = {
     container: {
       paddingTop: "30px",
@@ -69,7 +72,7 @@ export const OrgChartComponent: React.FC<OrgChartProps> = ({
       chart.compactMarginBetween(() => withDefault(compactMarginBetween, 50));
 
       chart.onNodeClick((d) => {
-        chartProps.setClickedNode(d.data.id);
+        chartProps.setClickedNode(d.data);
         chartProps.onNodeClick();
       });
 
@@ -125,34 +128,17 @@ export const OrgChartComponent: React.FC<OrgChartProps> = ({
       chart
         .container(d3Container.current)
         .data(Array.from(data) as unknown as User[])
+        .layout(layout ?? "top")
+        .setActiveNodeCentered(true)
         .render();
     }
   }, [data, d3Container.current]);
 
   return (
     <div>
+      <Button onClick={() => chartRef.current.expandAll()}>Expand All</Button>
+      <Button onClick={() => chartRef.current.fit()}>Fit To Screen</Button>
       <div ref={d3Container}></div>
     </div>
   );
 };
-
-function withDefault(
-  value: string | number | undefined,
-  defaultValue: number
-): number {
-  const $value = Number(value);
-  return $value <= 0 ? defaultValue : $value;
-}
-
-function toCss(styles: React.CSSProperties): string {
-  return Object.entries(styles)
-    .map(([key, value]) => {
-      // Convert camelCase to kebab-case
-      const kebabKey = key.replace(
-        /[A-Z]/g,
-        (match) => `-${match.toLowerCase()}`
-      );
-      return `${kebabKey}: ${value};`;
-    })
-    .join(" ");
-}

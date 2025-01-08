@@ -1,9 +1,11 @@
 import type { Retool } from "@tryretool/custom-component-support";
+import type { Layout } from "d3-org-chart";
 
 export type OrgChartProps = {
   data: Retool.SerializableArray;
   onNodeClick: () => void;
-  setClickedNode: (id: string) => void;
+  setClickedNode: (user: User) => void;
+  layout?: Layout;
   primaryColor?: string;
   linkColor?: string;
   nodeWidth?: number;
