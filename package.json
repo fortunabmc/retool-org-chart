@@ -1,0 +1,50 @@
+{
+  "name": "my-react-app",
+  "version": "0.1.0",
+  "private": true,
+  "scripts": {
+    "start": "npx retool-ccl dev",
+    "build": "npx retool-ccl build"
+  },
+  "browserslist": {
+    "production": [
+      ">0.2%",
+      "not dead",
+      "not op_mini all"
+    ],
+    "development": [
+      "last 1 chrome version",
+      "last 1 firefox version",
+      "last 1 safari version"
+    ]
+  },
+  "dependencies": {
+    "@tryretool/custom-component-support": "latest",
+    "d3": "^7.9.0",
+    "d3-org-chart": "^3.1.1",
+    "eslint-plugin-prettier": "^5.2.1",
+    "react": "^18.2.0",
+    "react-dom": "^18.2.0"
+  },
+  "devDependencies": {
+    "@types/d3": "^7.4.3",
+    "@types/d3-org-chart": "^3.1.2",
+    "@types/react": "^18.2.55",
+    "@typescript-eslint/eslint-plugin": "^7.3.1",
+    "@typescript-eslint/parser": "^7.3.1",
+    "eslint": "^8.57.0",
+    "eslint-plugin-react": "^7.34.1",
+    "postcss-modules": "^6.0.0",
+    "prettier": "^3.0.3"
+  },
+  "engines": {
+    "node": ">=20.0.0"
+  },
+  "retoolCustomComponentLibraryConfig": {
+    "name": "ReactOrgChart",
+    "label": "ReactOrgChart",
+    "description": "Display a heirarchy of users and managers.",
+    "entryPoint": "src/index.tsx",
+    "outputPath": "dist"
+  }
+}
