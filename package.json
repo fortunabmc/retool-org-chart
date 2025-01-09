@@ -2,11 +2,23 @@
   "name": "@fortunabmc/retool-org-chart",
   "version": "0.2.0",
   "private": true,
+  "description": "Retool Custom Component Wrapper for https://github.com/bumbeishvili/org-chart",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/fortunabmc/retool-org-chart"
+  },
+  "license": "MIT",
+  "author": {
+    "name": "Kevin Hill",
+    "email": "kevin.hill@fortuanbmc.com"
+  },
   "scripts": {
-    "dev": "npx retool-ccl dev",
-    "start": "npx retool-ccl dev",
     "build": "npx retool-ccl build",
-    "deploy": "npx retool-ccl deploy"
+    "deploy": "npx retool-ccl deploy",
+    "dev": "npx retool-ccl dev",
+    "generate:options": "node ./scripts/manifest-to-markdown.mjs",
+    "prod": "npm run deploy",
+    "start": "npm run dev"
   },
   "browserslist": {
     "production": [
