@@ -1,13 +1,12 @@
-import React from "react";
-import chroma from "chroma-js";
 import { Retool } from "@tryretool/custom-component-support";
+import React from "react";
+import { ErrorBoundary } from "react-error-boundary";
 
-import { OrgChartComponent } from "./OrgChart";
-import ThemeContext from "./ThemeContext";
+import ErrorFallback from "./components/ErrorFallback";
+import { OrgChartComponent } from "./components/OrgChart";
+import ThemeContext from "./lib/ThemeContext";
 
 import type { Layout } from "d3-org-chart";
-
-import { FORTUNA_PURPLE } from "./Constants";
 
 export const OrgChart: React.FC = () => {
   Retool.useComponentSettings({
@@ -21,7 +20,7 @@ export const OrgChart: React.FC = () => {
     description: "Array of users with `id` and `parentId`"
   });
 
-  const [layout] = Retool.useStateEnumeration({
+  const [layout] = Retool.useStateEnumeration<Layout[]>({
     name: "layout",
     label: "Layout Style",
     description: "Direction of layout for the tree",
@@ -39,14 +38,14 @@ export const OrgChart: React.FC = () => {
 
   const [nodeWidth] = Retool.useStateNumber({
     name: "nodeWidth",
-    label: "Node Height",
+    label: "Node Width",
     description: "Width of the rendered node",
     initialValue: 250
   });
 
   const [childrenMargin] = Retool.useStateNumber({
     name: "childrenMargin",
-    label: "Children-Parent Gap",
+    label: "Parent / Child Gap",
     description: "Vertical spacing between parent and children",
     initialValue: 60
   });
@@ -79,16 +78,11 @@ export const OrgChart: React.FC = () => {
     initialValue: 50
   });
 
-  const [primaryColor] = Retool.useStateString({
-    name: "primaryColor",
-    label: "Primary Color",
-    description: "Color for the accent"
-  });
-
   const [linkColor] = Retool.useStateString({
     name: "linkColor",
     label: "Link Color",
-    description: "Color for the links between nodes"
+    description: "Color for the links between nodes",
+    initialValue: "#FFF"
   });
 
   const [linkWidth] = Retool.useStateNumber({
@@ -96,6 +90,20 @@ export const OrgChart: React.FC = () => {
     label: "Link Width",
     description: "Stroke width of the links between nodes",
     initialValue: 2
+  });
+
+  const [nodeTemplateStyle] = Retool.useStateString({
+    name: "nodeTemplateStyle",
+    label: "Node Template CSS",
+    description:
+      'CSS for rendering the nodes. Define classes and use them in node HTML. EX: <p class="styled">Hello <? user.name ?></p>'
+  });
+
+  const [nodeTemplate] = Retool.useStateString({
+    name: "nodeTemplate",
+    label: "Node Template HTML",
+    description:
+      "HTML template for rendering the nodes. User and Node props available as vars to templates. EX: <p>Hello <? user.name ?></p>"
   });
 
   const onNodeClick = Retool.useEventCallback({
@@ -106,33 +114,44 @@ export const OrgChart: React.FC = () => {
     name: "onNodeClick"
   });
 
+  const handleError = (error: Error, info: React.ErrorInfo) => {
+    console.log(error, info.componentStack);
+  };
+
   return (
     <ThemeContext.Provider
       value={{
         controls: {
           fontSize: "1em",
           color: "white",
-          bgColor: FORTUNA_PURPLE,
-          hoverBgColor: chroma(FORTUNA_PURPLE).darken().hex()
+          bgColor: "blue",
+          hoverBgColor: "darkblue"
         }
       }}
     >
-      <OrgChartComponent
-        data={data}
-        linkColor={linkColor}
-        layout={layout as Layout}
-        primaryColor={primaryColor}
-        nodeWidth={nodeWidth}
-        nodeHeight={nodeHeight}
-        linkWidth={linkWidth}
-        childrenMargin={childrenMargin}
-        siblingsMargin={siblingsMargin}
-        neighbourMargin={neighbourMargin}
-        compactMarginPair={compactMarginPair}
-        compactMarginBetween={compactMarginBetween}
-        onNodeClick={onNodeClick}
-        setClickedNode={setClickedNode}
-      />
+      <ErrorBoundary
+        FallbackComponent={ErrorFallback}
+        onError={handleError}
+      >
+        <OrgChartComponent
+          data={data}
+          linkColor={linkColor}
+          templateDelimeters={["<?", "?>"]}
+          nodeTemplate={nodeTemplate}
+          nodeTemplateStyle={nodeTemplateStyle}
+          layout={layout}
+          nodeWidth={nodeWidth}
+          nodeHeight={nodeHeight}
+          linkWidth={linkWidth}
+          childrenMargin={childrenMargin}
+          siblingsMargin={siblingsMargin}
+          neighbourMargin={neighbourMargin}
+          compactMarginPair={compactMarginPair}
+          compactMarginBetween={compactMarginBetween}
+          onNodeClick={onNodeClick}
+          setClickedNode={setClickedNode}
+        />
+      </ErrorBoundary>
     </ThemeContext.Provider>
   );
 };

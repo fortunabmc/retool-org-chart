@@ -1,6 +1,6 @@
 {
-  "name": "my-react-app",
-  "version": "0.1.0",
+  "name": "@fortunabmc/retool-org-chart",
+  "version": "0.2.0",
   "private": true,
   "scripts": {
     "start": "npx retool-ccl dev",
@@ -20,23 +20,28 @@
   },
   "dependencies": {
     "@tryretool/custom-component-support": "latest",
-    "chroma-js": "^3.1.2",
     "d3": "^7.9.0",
     "d3-org-chart": "^3.1.1",
+    "mustache": "^4.2.0",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
+    "react-error-boundary": "^5.0.0",
     "styled-components": "^6.1.14"
   },
   "devDependencies": {
-    "@types/chroma-js": "^3.1.0",
     "@types/d3": "^7.4.3",
     "@types/d3-org-chart": "^3.1.2",
+    "@types/mustache": "^4.2.5",
     "@types/react": "^18.2.55",
     "@typescript-eslint/eslint-plugin": "^7.3.1",
     "@typescript-eslint/parser": "^7.3.1",
     "eslint": "^8.57.0",
+    "eslint-import-resolver-typescript": "^3.7.0",
+    "eslint-plugin-import": "^2.31.0",
+    "eslint-plugin-import-x": "^4.6.1",
     "eslint-plugin-prettier": "^5.2.1",
     "eslint-plugin-react": "^7.34.1",
+    "eslint-plugin-simple-import-sort": "^12.1.1",
     "postcss-modules": "^6.0.0",
     "prettier": "^3.0.3"
   },
