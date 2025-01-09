@@ -12,6 +12,7 @@ import type { Retool } from "@tryretool/custom-component-support";
 
 type OrgChartProps = {
   data: Retool.SerializableArray;
+  showControls: boolean;
   nodeTemplate: string;
   nodeTemplateStyle: string;
   templateDelimeters: OpeningAndClosingTags;
@@ -47,6 +48,7 @@ export const OrgChartComponent: React.FC<OrgChartProps> = ({
   neighbourMargin,
   compactMarginPair,
   compactMarginBetween,
+  showControls,
   ...chartProps
 }) => {
   const d3Container = useRef(null);
@@ -104,7 +106,7 @@ export const OrgChartComponent: React.FC<OrgChartProps> = ({
           .compactMarginPair(() => withDefault(compactMarginPair, 100))
           .compactMarginBetween(() => withDefault(compactMarginBetween, 50));
 
-        chart.onNodeClick((d) => {
+        chart.onNodeClick(function (d) {
           chartProps.setClickedNode(d.data);
           chartProps.onNodeClick();
         });
@@ -120,19 +122,25 @@ export const OrgChartComponent: React.FC<OrgChartProps> = ({
 
   return (
     <div>
-      <Button onClick={() => chartRef.current.fit()}>Fit To Screen</Button>
-      <Button onClick={() => chartRef.current.expandAll()}>Expand All</Button>
-      <Button onClick={() => chartRef.current.collapseAll()}>
-        Collapse All
-      </Button>
-      <Button
-        onClick={() => {
-          reloadNodeStyles();
-          chartRef.current.restyleForeignObjectElements();
-        }}
-      >
-        Repaint Nodes
-      </Button>
+      {showControls && (
+        <>
+          <Button onClick={() => chartRef.current.fit()}>Fit To Screen</Button>
+          <Button onClick={() => chartRef.current.expandAll()}>
+            Expand All
+          </Button>
+          <Button onClick={() => chartRef.current.collapseAll()}>
+            Collapse All
+          </Button>
+          <Button
+            onClick={() => {
+              reloadNodeStyles();
+              chartRef.current.restyleForeignObjectElements();
+            }}
+          >
+            Repaint Nodes
+          </Button>
+        </>
+      )}
       <div ref={d3Container}></div>
     </div>
   );

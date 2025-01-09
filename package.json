@@ -3,8 +3,10 @@
   "version": "0.2.0",
   "private": true,
   "scripts": {
+    "dev": "npx retool-ccl dev",
     "start": "npx retool-ccl dev",
-    "build": "npx retool-ccl build"
+    "build": "npx retool-ccl build",
+    "deploy": "npx retool-ccl deploy"
   },
   "browserslist": {
     "production": [

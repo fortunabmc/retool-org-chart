@@ -29,6 +29,13 @@ export const OrgChart: React.FC = () => {
     initialValue: "left"
   });
 
+  const [showControls] = Retool.useStateBoolean({
+    name: "showControls",
+    label: "Show Control Buttons",
+    inspector: "checkbox",
+    initialValue: true
+  });
+
   const [nodeHeight] = Retool.useStateNumber({
     name: "nodeHeight",
     label: "Node Height",
@@ -111,7 +118,9 @@ export const OrgChart: React.FC = () => {
   });
 
   const [_, setClickedNode] = Retool.useStateObject({
-    name: "onNodeClick"
+    name: "onNodeClick",
+    inspector: "hidden",
+    initialValue: {}
   });
 
   const handleError = (error: Error, info: React.ErrorInfo) => {
@@ -135,6 +144,7 @@ export const OrgChart: React.FC = () => {
       >
         <OrgChartComponent
           data={data}
+          showControls={showControls}
           linkColor={linkColor}
           templateDelimeters={["<?", "?>"]}
           nodeTemplate={nodeTemplate}
