@@ -53,6 +53,7 @@ The underlying library will extend your `IUser` objects with the following addit
 
 ```ts
 interface NodeProps {
+  _expanded: boolean;
   _pagingStep: number;
   _pagingButton: boolean;
   _totalSubordinates: number;
@@ -83,7 +84,6 @@ Also available are:
 
 ```css
 .container {
-  /*padding-top: 30px;*/
   margin-left: 1px;
   border-radius: 6px;
   overflow: visible;
@@ -137,6 +137,14 @@ Also available are:
   </div>
 </div>
 ```
+
+## Events
+
+### onNodeClick
+
+When a node is clicked, the `IUser` with `NodeProps` will be set to the `onNodeClicked` state property of the Component.
+
+!["onNodeClick Example"](./img/onNodeClick.png)
 
 ## Org Chart Options
 
