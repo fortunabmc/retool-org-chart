@@ -49,13 +49,26 @@ interface IUser {
 }
 ```
 
+The underlying library will extend your `IUser` objects with the following additional properties.
+
+```ts
+interface NodeProps {
+  _pagingStep: number;
+  _pagingButton: boolean;
+  _totalSubordinates: number;
+  _directSubordinates: number;
+  _directSubordinatesPaging: number;
+}
+```
+
 ### Node Template CSS & Node Template HTML
 
 Under the hood, these two fields use [Mustache.js](https://github.com/janl/mustache.js) as a template engine.
 
 The delimeters have been set to `<?` and `?>` to prevent interferenece with Retool's `{{ vars }}`
 
-Both the CSS and HTML have the full user object as `<? user.PROP ?>`.
+Both the CSS and HTML templates have the user object as `<? user.PROP ?>` and the additional props defined in `NodeProps`.
+
 If your user object has `user.name = "Tom"` then in the HTML template you can use `<? user.name ?>`.
 
 Also available are:
