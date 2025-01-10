@@ -87,36 +87,63 @@ Also available are:
 ### Template CSS
 
 ```css
+:root {
+  --profile-image-radius: 32px;
+  --border-radius: 6px;
+  --footer-height: 32px;
+  --accent-bar-height: 10px;
+}
+
 .container {
-  margin-left: 1px;
-  border-radius: 6px;
+  display: flex;
+  flex-direction: column;
   overflow: visible;
   height: <? node.height ?>px;
   background-color: #fff;
-}
+  border-radius: var(--border-radius);
 
-.content {
-  height: calc(<? node.height ?>px - 32px);
-}
+  div.accent {
+    margin-top: -48px;
+    height: var(--accent-bar-height);
+    border-radius: var(--border-radius) var(--border-radius) 0 0;
+    background-color: <? node.linkColor ?>;
+  }
 
-.userpic {
-  width: 60px;
-  height: 60px;
-  margin-top: -20px;
-  background-color: #fff;
-  margin-left: calc(<? node.width ?>px / 2 - 33px);
-  border-radius: 100px;
-  border: 2px solid <? node.linkColor ?>;
-}
+  header {
+    text-align: center;
 
-.hr {
-  margin-top: -48px;
-  height: 10px;
-  border-radius: 6px 6px 0 0;
-  background-color: <? node.linkColor ?>;
-}
+    img {
+      width: calc((var(--profile-image-radius) - 2px) * 2);
+      height: calc((var(--profile-image-radius) - 2px) * 2);
+      margin-top: -20px;
+      border-radius: 100px;
+      border: 2px solid <? node.linkColor ?>;
+    }
+  }
 
-.footer {
+  section {
+    flex-grow: 1;
+    padding: 50px 10px 0;
+    text-align: center;
+
+    .name {
+      color: #111672;
+      font-size: 16px;
+      font-weight: bold;
+    }
+
+    .position {
+      color: #404040;
+      font-size: 16px;
+      margin-top: 4px;
+    }
+  }
+
+  footer {
+    display: flex;
+    justify-content: space-between;
+    padding: 5px 8px;
+  }
 }
 ```
 
@@ -124,21 +151,18 @@ Also available are:
 
 ```html
 <div class="container">
-  <div class="content">
-    <img
-      class="userpic"
-      src="<? user.imageUrl ?>"
-    />
-    <div class="hr"></div>
-    <div class="userinfo">
-      <div class="name"><? user.name ?></div>
-      <div class="position"><? user.position ?></div>
-    </div>
-    <div class="footer">
-      <div>Manages: <? user._directSubordinates ?> 👤</div>
-      <div>Oversees: <? user._totalSubordinates ?>👤</div>
-    </div>
-  </div>
+  <header>
+    <img src="<? user.imageUrl ?>" />
+    <div class="accent"></div>
+  </header>
+  <section>
+    <div class="name"><? user.name ?></div>
+    <div class="position"><? user.positionName ?></div>
+  </section>
+  <footer>
+    <div>Manages:&nbsp;<? user._directSubordinates ?>&nbsp;👤</div>
+    <div>Oversees:&nbsp;<? user._totalSubordinates ?>&nbsp;👤</div>
+  </footer>
 </div>
 ```
 
