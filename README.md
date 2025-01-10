@@ -32,6 +32,7 @@ Retool Custom Component Wrapper for https://github.com/bumbeishvili/org-chart
 ### User List
 
 The user list is an array of objects, defining the heirarchy and user info.
+
 The following is an example interface for the component.
 
 ```ts
@@ -54,7 +55,8 @@ Under the hood, these two fields use [Mustache.js](https://github.com/janl/musta
 
 The delimeters have been set to `<?` and `?>` to prevent interferenece with Retool's `{{ vars }}`
 
-Both the CSS and HTML have the full user object as `<? user.PROP ?>`. If your user object has `user.name = "Tom"` then in the HTML template you can use `<? user.name ?>`.
+Both the CSS and HTML have the full user object as `<? user.PROP ?>`.
+If your user object has `user.name = "Tom"` then in the HTML template you can use `<? user.name ?>`.
 
 Also available are:
 
@@ -146,3 +148,7 @@ Also available are:
 | onNodeClick          | object      |                                                                                                                             | [object Object] | hidden    |                          |
 
 <!-- EMBED:END -->
+
+# Example App
+
+[A Demo Retool App json is also available for import.](./example/OrgChartDemo.json)
