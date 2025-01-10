@@ -4,9 +4,49 @@ Retool Custom Component Wrapper for https://github.com/bumbeishvili/org-chart
 
 ![left-tree](./img/left.png)
 
+## Deploy in Retool
+
+1.  Checkout the repo
+
+    > `git clone https://github.com/fortunabmc/retool-org-chart`
+
+2.  Install dependencies
+
+    > `npm install`
+
+3.  Login to Retool
+
+    > `npx retool-ccl login`
+
+4.  Deploy to Retool
+
+    > `npx retool-ccl deploy`
+
+5.  Component will be available in Retool Editor
+    > ![alt text](./img/component.png)
+
 ## Configure via Retool Editor
 
 ![alt text](./img/settings.png)
+
+### User List
+
+The user list is an array of objects, defining the heirarchy and user info.
+The following is an example interface for the component.
+
+```ts
+interface IUser {
+  // mandatory props
+  id: string | number;
+  parentId: null; // `null` for the root node or an id of another `IUser`
+  // optional data
+  name: string;
+  email: string;
+  position: string;
+  imageUrl: string;
+  // ...
+}
+```
 
 ### Node Template CSS & Node Template HTML
 
@@ -22,25 +62,7 @@ Also available are:
 - `<? node.height ?>`
 - `<? node.lineColor ?>`
 
-## [View Component Options](./OPTIONS.md)
-
 ## Examples with variable interpolation
-
-### User List Interface
-
-```ts
-interface IUser {
-  // mandatory props
-  id: string | number;
-  parentId: null; // `null` for the root node or an id of another `IUser`
-  // optional data
-  name: string;
-  email: string;
-  position: string;
-  imageUrl: string;
-  // ...
-}
-```
 
 ### Template CSS
 
@@ -100,3 +122,27 @@ interface IUser {
   </div>
 </div>
 ```
+
+## Org Chart Options
+
+<!-- EMBED:START -->
+
+| Name                 | Type        | Description                                                                                                                 | Initial Value   | Inspector | Enum Definition          |
+| -------------------- | ----------- | --------------------------------------------------------------------------------------------------------------------------- | --------------- | --------- | ------------------------ |
+| User List            | array       | Array of users with `id` and `parentId`                                                                                     |                 |           |                          |
+| Layout Style         | enumeration | Direction of layout for the tree                                                                                            | left            | segmented | left, top, bottom, right |
+| Show Control Buttons | boolean     |                                                                                                                             | true            | checkbox  |                          |
+| Node Height          | number      | Height of the rendered node                                                                                                 | 200             |           |                          |
+| Node Width           | number      | Width of the rendered node                                                                                                  | 250             |           |                          |
+| Parent / Child Gap   | number      | Vertical spacing between parent and children                                                                                | 60              |           |                          |
+| Siblings Gap         | number      | Horizontal spacing between sibling nodes                                                                                    | 60              |           |                          |
+| Neighbor Spacing     | number      | Horizontal spacing between groups of child nodes                                                                            | 80              |           |                          |
+| Child X Gap          | number      | Horizontal spacing between sibling child nodes                                                                              | 100             |           |                          |
+| Child Y Gap          | number      | Vertical spacing between sibling child nodes                                                                                | 50              |           |                          |
+| Link Width           | number      | Stroke width of the links between nodes                                                                                     | 2               |           |                          |
+| Link Color           | string      | Color for the links between nodes                                                                                           | #FFF            |           |                          |
+| Node Template CSS    | string      | CSS for rendering the nodes. Define classes and use them in node HTML. EX: <p class="styled">Hello <? user.name ?></p>      |                 |           |                          |
+| Node Template HTML   | string      | HTML template for rendering the nodes. User and Node props available as vars to templates. EX: <p>Hello <? user.name ?></p> |                 |           |                          |
+| onNodeClick          | object      |                                                                                                                             | [object Object] | hidden    |                          |
+
+<!-- EMBED:END -->

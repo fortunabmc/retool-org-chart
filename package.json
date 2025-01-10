@@ -18,6 +18,7 @@
     "dev": "npx retool-ccl dev",
     "generate:options": "node ./scripts/manifest-to-markdown.mjs",
     "prod": "npm run deploy",
+    "readme": "node ./scripts/build-readme.mjs",
     "start": "npm run dev"
   },
   "browserslist": {
@@ -46,6 +47,7 @@
     "@types/d3": "^7.4.3",
     "@types/d3-org-chart": "^3.1.2",
     "@types/mustache": "^4.2.5",
+    "@types/node": "^22.10.5",
     "@types/react": "^18.2.55",
     "@typescript-eslint/eslint-plugin": "^7.3.1",
     "@typescript-eslint/parser": "^7.3.1",
