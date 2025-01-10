@@ -1,0 +1,12 @@
+.ReactOrgChartWrapper {
+    margin: 0;
+    padding: 0;
+    height: 100%;
+    overflow: hidden;
+}
+
+.ReactOrgChart {
+    margin: 0;
+    padding: 0;
+    height: 100%;
+}

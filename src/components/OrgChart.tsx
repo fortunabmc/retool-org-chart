@@ -1,14 +1,17 @@
 import * as d3 from "d3";
-import { type Layout, OrgChart } from "d3-org-chart";
-import { type OpeningAndClosingTags } from "mustache";
+import { OrgChart } from "d3-org-chart";
 import React, { useCallback, useLayoutEffect, useRef } from "react";
+import { styled } from "styled-components";
 
 import { useMustache } from "../hooks/useMustache";
 import { withDefault } from "../lib/utils";
 import Button from "./Button";
+import styles from "./OrgChart.module.css";
 
 import type { IUser } from "../lib/IUser";
 import type { Retool } from "@tryretool/custom-component-support";
+import type { Layout } from "d3-org-chart";
+import type { OpeningAndClosingTags } from "mustache";
 
 type OrgChartProps = {
   data: Retool.SerializableArray;
@@ -61,7 +64,13 @@ export const OrgChartComponent: React.FC<OrgChartProps> = ({
     height: nodeHeight
   };
 
-  const reloadNodeStyles = useCallback(() => {
+  const resizeSvgContainer = () => {
+    d3.select(d3Container.current)
+      .selectChild(".svg-chart-container")
+      .attr("height", "1400px");
+  };
+
+  const styleNodes = useCallback(() => {
     const d3Ctx = d3.select(d3Container.current);
     const interpolatedCSS = renderTemplate(nodeTemplateStyle, {
       node: nodeInfo
@@ -72,9 +81,13 @@ export const OrgChartComponent: React.FC<OrgChartProps> = ({
   }, [nodeTemplateStyle]);
 
   useLayoutEffect(() => {
+    if (d3Container.current) resizeSvgContainer();
+  }, [d3Container.current]);
+
+  useLayoutEffect(() => {
     if (d3Container.current) {
       // Node Template Styles
-      reloadNodeStyles();
+      styleNodes();
 
       if (data) {
         const chart = chartRef.current;
@@ -117,11 +130,13 @@ export const OrgChartComponent: React.FC<OrgChartProps> = ({
           .setActiveNodeCentered(true)
           .render();
       }
+
+      resizeSvgContainer();
     }
   }, [data, d3Container.current, nodeTemplateStyle]);
 
   return (
-    <div>
+    <div className={styles.ReactOrgChartWrapper}>
       {showControls && (
         <>
           <Button onClick={() => chartRef.current.fit()}>Fit To Screen</Button>
@@ -133,15 +148,18 @@ export const OrgChartComponent: React.FC<OrgChartProps> = ({
           </Button>
           <Button
             onClick={() => {
-              reloadNodeStyles();
-              chartRef.current.restyleForeignObjectElements();
+              styleNodes();
+              chartRef.current.render();
             }}
           >
             Repaint Nodes
           </Button>
         </>
       )}
-      <div ref={d3Container}></div>
+      <div
+        ref={d3Container}
+        className={styles.ReactOrgChart}
+      ></div>
     </div>
   );
 };
