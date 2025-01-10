@@ -30,12 +30,15 @@ Also available are:
 
 ```ts
 interface IUser {
-  id: string | number; // mandatory
-  parentId: null; // mandatory; `null` for the root or an id of another `IUser`
-  name?: string;
-  email?: string;
-  position?: string;
-  imageUrl?: string;
+  // mandatory props
+  id: string | number;
+  parentId: null; // `null` for the root node or an id of another `IUser`
+  // optional data
+  name: string;
+  email: string;
+  position: string;
+  imageUrl: string;
+  // ...
 }
 ```
 
