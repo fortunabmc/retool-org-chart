@@ -35,6 +35,8 @@ The user list is an array of objects, defining the heirarchy and user info.
 
 The following is an example interface for the component.
 
+#### IUser
+
 ```ts
 interface IUser {
   // mandatory props
@@ -50,6 +52,8 @@ interface IUser {
 ```
 
 The underlying library will extend your `IUser` objects with the following additional properties.
+
+#### NodeProps
 
 ```ts
 interface NodeProps {
