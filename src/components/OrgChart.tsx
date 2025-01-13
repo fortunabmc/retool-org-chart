@@ -1,27 +1,21 @@
 import * as d3 from "d3";
 import { OrgChart } from "d3-org-chart";
 import React, { useCallback, useLayoutEffect, useRef } from "react";
-import { styled } from "styled-components";
 
 import { useMustache } from "../hooks/useMustache";
 import { withDefault } from "../lib/utils";
-import Button from "./Button";
 import styles from "./OrgChart.module.css";
 
-import type { IUser } from "../lib/IUser";
+import type { ControlMessage, IUser } from "../lib/types";
 import type { Retool } from "@tryretool/custom-component-support";
 import type { Layout } from "d3-org-chart";
 import type { OpeningAndClosingTags } from "mustache";
 
 type OrgChartProps = {
   data: Retool.SerializableArray;
-  showControls: boolean;
+  layout: Layout;
   nodeTemplate: string;
   nodeTemplateStyle: string;
-  templateDelimeters: OpeningAndClosingTags;
-  onNodeClick: () => void;
-  setClickedNode: (user: IUser) => void;
-  layout: Layout;
   linkColor: string;
   nodeWidth: number;
   nodeHeight: number;
@@ -31,7 +25,13 @@ type OrgChartProps = {
   neighbourMargin: number;
   compactMarginPair: number;
   compactMarginBetween: number;
+  templateDelimeters: OpeningAndClosingTags;
+  onNodeClick(): void;
+  setClickedNode(user: IUser): void;
+  onControlClicked(onMessage: (data: ControlMessage) => void): void;
 };
+
+type EventHandlers = Record<ControlMessage["action"], () => void>;
 
 /**
  * @see https://github.com/bumbeishvili/org-chart
@@ -51,12 +51,18 @@ export const OrgChartComponent: React.FC<OrgChartProps> = ({
   neighbourMargin,
   compactMarginPair,
   compactMarginBetween,
-  showControls,
+  onControlClicked,
   ...chartProps
 }) => {
   const d3Container = useRef(null);
   const chartRef = useRef(new OrgChart<IUser>());
   const renderTemplate = useMustache(templateDelimeters);
+
+  const eventHandlers: EventHandlers = {
+    fit: () => chartRef.current.fit(),
+    expandAll: () => chartRef.current.expandAll(),
+    collapseAll: () => chartRef.current.collapseAll()
+  };
 
   const nodeInfo = {
     linkColor,
@@ -80,8 +86,15 @@ export const OrgChartComponent: React.FC<OrgChartProps> = ({
     d3Ctx.append("style").attr("id", "nodeStyles").text(interpolatedCSS);
   }, [nodeTemplateStyle]);
 
+  onControlClicked((data) => {
+    console.log("STORAGE EVENT!", data);
+    return eventHandlers[data.action]();
+  });
+
   useLayoutEffect(() => {
-    if (d3Container.current) resizeSvgContainer();
+    if (d3Container.current) {
+      resizeSvgContainer();
+    }
   }, [d3Container.current]);
 
   useLayoutEffect(() => {
@@ -137,26 +150,8 @@ export const OrgChartComponent: React.FC<OrgChartProps> = ({
 
   return (
     <div className={styles.ReactOrgChartWrapper}>
-      {showControls && (
-        <>
-          <Button onClick={() => chartRef.current.fit()}>Fit To Screen</Button>
-          <Button onClick={() => chartRef.current.expandAll()}>
-            Expand All
-          </Button>
-          <Button onClick={() => chartRef.current.collapseAll()}>
-            Collapse All
-          </Button>
-          <Button
-            onClick={() => {
-              styleNodes();
-              chartRef.current.render();
-            }}
-          >
-            Repaint Nodes
-          </Button>
-        </>
-      )}
       <div
+        id="ReactOrgChart"
         ref={d3Container}
         className={styles.ReactOrgChart}
       ></div>

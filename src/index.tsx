@@ -1,13 +1,26 @@
 import { Retool } from "@tryretool/custom-component-support";
-import React from "react";
+import React, { useEffect } from "react";
 import { ErrorBoundary } from "react-error-boundary";
 
+import CssButton, { type ButtonProps } from "./components/CssButton";
 import ErrorFallback from "./components/ErrorFallback";
 import { OrgChartComponent } from "./components/OrgChart";
+import { useForceUpdate } from "./hooks/useForceUpdate";
+import { LocalStorageEventManager } from "./lib/LocalStorageEventManager";
 import ThemeContext from "./lib/ThemeContext";
 
+import type { ControlMessage } from "./lib/types";
 import type { Layout } from "d3-org-chart";
 
+type Events = {
+  CONTROL_CLICKED: ControlMessage;
+};
+
+const LSEM = LocalStorageEventManager<Events>({ namespace: "orgChartControl" });
+
+/**
+ * Org Chart Component
+ */
 export const OrgChart: React.FC = () => {
   Retool.useComponentSettings({
     defaultHeight: 60,
@@ -27,13 +40,6 @@ export const OrgChart: React.FC = () => {
     enumDefinition: ["left", "top", "bottom", "right"],
     inspector: "segmented",
     initialValue: "left"
-  });
-
-  const [showControls] = Retool.useStateBoolean({
-    name: "showControls",
-    label: "Show Control Buttons",
-    inspector: "checkbox",
-    initialValue: true
   });
 
   const [nodeHeight] = Retool.useStateNumber({
@@ -127,6 +133,8 @@ export const OrgChart: React.FC = () => {
     console.log(error, info.componentStack);
   };
 
+  const useControlClickedEffect = LSEM.getListenerHook("CONTROL_CLICKED");
+
   return (
     <ThemeContext.Provider
       value={{
@@ -144,24 +152,77 @@ export const OrgChart: React.FC = () => {
       >
         <OrgChartComponent
           data={data}
-          showControls={showControls}
-          linkColor={linkColor}
-          templateDelimeters={["<?", "?>"]}
-          nodeTemplate={nodeTemplate}
-          nodeTemplateStyle={nodeTemplateStyle}
           layout={layout}
+          linkColor={linkColor}
+          linkWidth={linkWidth}
           nodeWidth={nodeWidth}
           nodeHeight={nodeHeight}
-          linkWidth={linkWidth}
           childrenMargin={childrenMargin}
           siblingsMargin={siblingsMargin}
           neighbourMargin={neighbourMargin}
           compactMarginPair={compactMarginPair}
           compactMarginBetween={compactMarginBetween}
+          nodeTemplate={nodeTemplate}
+          nodeTemplateStyle={nodeTemplateStyle}
+          templateDelimeters={["<?", "?>"]}
           onNodeClick={onNodeClick}
           setClickedNode={setClickedNode}
+          onControlClicked={useControlClickedEffect}
         />
       </ErrorBoundary>
     </ThemeContext.Provider>
+  );
+};
+
+/**
+ * Org Chart Controls Component
+ */
+export const OrgChartControls: React.FC = () => {
+  const repaint = useForceUpdate();
+
+  const [containerStyle] = Retool.useStateObject({
+    name: "containerStyle",
+    label: "Container CSS",
+    description: "Object that satisfies React.CSSProperties for the container.",
+    initialValue: {}
+  });
+
+  const [buttonStyle] = Retool.useStateObject({
+    name: "buttonStyle",
+    label: "Button CSS",
+    description: "Object that satisfies React.CSSProperties for the buttons.",
+    initialValue: {}
+  });
+
+  useEffect(repaint, [containerStyle, buttonStyle]);
+
+  const controlClicked = Retool.useEventCallback({ name: "controlClicked" });
+
+  const emit = LSEM.getEmitter("CONTROL_CLICKED");
+
+  const act = (action: ControlMessage["action"]) => {
+    emit({ action });
+    controlClicked();
+  };
+
+  const StyledButton = ({ children, ...props }: Omit<ButtonProps, "style">) => (
+    <div
+      style={buttonStyle}
+      {...props}
+    >
+      <div style={{ marginTop: "auto", marginBottom: "auto" }}>{children}</div>
+    </div>
+  );
+
+  return (
+    <div style={{ height: "100vh" }}>
+      <div style={containerStyle}>
+        <StyledButton onClick={() => act("fit")}>Fit To Screen</StyledButton>
+        <StyledButton onClick={() => act("expandAll")}>Expand All</StyledButton>
+        <StyledButton onClick={() => act("collapseAll")}>
+          Collapse All
+        </StyledButton>
+      </div>
+    </div>
   );
 };

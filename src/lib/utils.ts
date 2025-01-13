@@ -1,3 +1,5 @@
+export const MESSAGE_NS = "ReactOrgChartControls";
+
 export function withDefault(
   value: string | number | undefined,
   defaultValue: number
