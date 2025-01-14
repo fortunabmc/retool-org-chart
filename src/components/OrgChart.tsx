@@ -60,6 +60,7 @@ export const OrgChartComponent: React.FC<OrgChartProps> = ({
 
   const eventHandlers: EventHandlers = {
     fit: () => chartRef.current.fit(),
+    export: () => chartRef.current.exportImg({ full: true }),
     expandAll: () => chartRef.current.expandAll(),
     collapseAll: () => chartRef.current.collapseAll()
   };
@@ -73,7 +74,7 @@ export const OrgChartComponent: React.FC<OrgChartProps> = ({
   const resizeSvgContainer = () => {
     d3.select(d3Container.current)
       .selectChild(".svg-chart-container")
-      .attr("height", "1400px");
+      .attr("height", "2000px");
   };
 
   const styleNodes = useCallback(() => {

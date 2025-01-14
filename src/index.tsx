@@ -1,3 +1,5 @@
+import "./index.module.css";
+
 import { Retool } from "@tryretool/custom-component-support";
 import React, { useEffect } from "react";
 import { ErrorBoundary } from "react-error-boundary";
@@ -222,6 +224,7 @@ export const OrgChartControls: React.FC = () => {
         <StyledButton onClick={() => act("collapseAll")}>
           Collapse All
         </StyledButton>
+        <StyledButton onClick={() => act("export")}>Export</StyledButton>
       </div>
     </div>
   );

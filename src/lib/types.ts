@@ -11,7 +11,7 @@ export interface IUser extends Retool.SerializableObject {
 }
 
 export type ControlMessage = {
-  action: "fit" | "expandAll" | "collapseAll";
+  action: "fit" | "expandAll" | "collapseAll" | "export";
 };
 
 export type DollarProps<T extends object> = {
